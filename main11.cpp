@@ -97,6 +97,57 @@ void unique_pointer(){
     cout<<"Unique pointer checking ... Passed"<<endl;
 }
 
+void shared_pointer(){
+    shared_ptr<int> s1;
+    assert(!s1);
+    assert(!s1.use_count());
+    auto s2 = make_shared<int>(1);
+    assert(s2.use_count()==1);
+    s1 = s2;
+
+    assert(s1.use_count()==2);
+    assert(*s1.get()==1);
+    *s1 = 2;
+    assert(*s1.get()== *s1);
+    assert(*s2 == 2);
+
+    s2 = nullptr; // like s2.reset();
+    assert(s1.use_count() == 1);
+    assert(!s2.use_count());
+
+
+    cout<<"Shared pointer checking ... Passed"<<endl;
+}
+
+
+char functype(const int& x){
+    assert(is_lvalue_reference<decltype(x)>::value);
+    return 'c';
+}
+
+char functype(int& x){
+    assert(is_lvalue_reference<decltype(x)>::value);
+    return 'l';
+}
+
+char functype(int&& x){
+    assert(is_rvalue_reference<decltype(x)>::value);
+    return 'r';
+}
+template<typename T>
+char functype_template(T&& x){ // x is a forwarding reference
+
+    assert(functype(x) != 'R');
+
+    return functype(forward<T>(x));
+}
+
+
+void overloading_referencing(){
+
+    assert(functype_template(3)=='c');
+
+}
 
 
 
@@ -110,6 +161,8 @@ int main(int argc, char *agrv[]){
     type_traits_check();
     move_operation();
     unique_pointer();
+    shared_pointer();
+    overloading_referencing();
     return 0;
 }
 
