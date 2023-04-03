@@ -65,6 +65,43 @@ void move_operation(){
     cout<<"Move checking ... Passed"<<endl;
 }
 
+void unique_pointer(){
+    
+    
+    int* p = new int();
+    *p=20;
+    unique_ptr <int> u1;
+    assert(p);
+    assert(u1 == nullptr);
+    assert(!u1);
+    u1.reset(new int(10));
+    assert(u1);
+    assert(*u1 == 10);
+    u1.reset(p);
+    *u1 = 30;
+    assert(*p==30);
+    //u1.reset();
+    //assert(u1==nullptr);
+    assert(p!=nullptr);
+
+
+    int *q = u1.get();
+    unique_ptr<int> u2;
+    // u2 = u1 ; // not allowed
+    assert(u1!=nullptr);
+    u2 = move(u1);
+    assert(u1==nullptr);
+    assert (u2.get() == q);
+
+
+    cout<<"Unique pointer checking ... Passed"<<endl;
+}
+
+
+
+
+
+
 
 int main(int argc, char *agrv[]){
 
@@ -72,6 +109,7 @@ int main(int argc, char *agrv[]){
     dynamic_memory();
     type_traits_check();
     move_operation();
+    unique_pointer();
     return 0;
 }
 
